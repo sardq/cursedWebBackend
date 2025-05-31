@@ -1,33 +1,28 @@
 package demo.Service;
-// package com.example.Service;
 
-// import com.twilio.Twilio;
-// import com.twilio.rest.api.v2010.account.Message;
-// import com.twilio.type.PhoneNumber;
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
-// import jakarta.annotation.PostConstruct;
+@Service
+public class SmsService {
 
-// import org.springframework.beans.factory.annotation.Value;
-// import org.springframework.stereotype.Service;
+    @Value("${twilio.account.sid}")
+    private String accountSid;
 
-// @Service
-// public class SmsService implements DefaultSmsService {
-// private final String accountSid;
-// private final String authToken;
-// private final String fromNumber;
+    @Value("${twilio.auth.token}")
+    private String authToken;
 
-// public SmsService(String accountSid, String authToken, String fromNumber) {
-// this.accountSid = accountSid;
-// this.authToken = authToken;
-// this.fromNumber = fromNumber;
-// Twilio.init(accountSid, authToken);
-// }
+    @Value("${twilio.phone.number}")
+    private String twilioPhoneNumber;
 
-// @Override
-// public void sendSms(String phoneNumber, String message) {
-// Message.creator(
-// new PhoneNumber(phoneNumber),
-// new PhoneNumber(fromNumber),
-// message).create();
-// }
-// }
+    public void sendOtp(String phoneNumber, String otp) {
+        Twilio.init(accountSid, authToken);
+        String phnoeNumberr = "+" + phoneNumber;
+        Message.creator(
+                new com.twilio.type.PhoneNumber(phnoeNumberr),
+                new com.twilio.type.PhoneNumber(twilioPhoneNumber),
+                "Ваш код успешно создан.").create();
+    }
+}

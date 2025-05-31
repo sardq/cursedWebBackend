@@ -15,7 +15,6 @@ import java.net.URI;
 
 @RestController
 public class AuthController {
-
     private final UserService userService;
     private final UserAuthenticationProvider userAuthenticationProvider;
 

@@ -56,7 +56,7 @@ public class DemoApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (args.length > 0 && Objects.equals("--populate", args[0])) {
-            final var admin = new UserEntity("admin", "admin", "admin", "123");
+            final var admin = new UserEntity("admin", "dreod@mail.ru", "admin", "89041839114");
             admin.setRole(UserRole.ADMIN);
             userService.create(admin);
 
