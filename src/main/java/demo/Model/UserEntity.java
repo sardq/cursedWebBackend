@@ -15,8 +15,6 @@ public class UserEntity extends BaseEntity {
     private String fullname;
     @Column(nullable = false, length = 20)
     private String email;
-    @Column(nullable = true, length = 11)
-    private String phone;
     @Column(nullable = false)
     private String password;
     private UserRole role;
@@ -24,12 +22,11 @@ public class UserEntity extends BaseEntity {
     public UserEntity() {
     }
 
-    public UserEntity(String fullname, String email, String password, String phone) {
+    public UserEntity(String fullname, String email, String password) {
 
         this.fullname = fullname;
         this.email = email;
         this.password = password;
-        this.phone = phone;
         this.role = UserRole.USER;
     }
 
@@ -65,17 +62,9 @@ public class UserEntity extends BaseEntity {
         this.password = password;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     @Override
     public int hashCode() {
-        return Objects.hash(id, fullname, email, password, phone);
+        return Objects.hash(id, fullname, email, password);
     }
 
     @Override
@@ -87,7 +76,6 @@ public class UserEntity extends BaseEntity {
         final UserEntity other = (UserEntity) obj;
         return Objects.equals(other.getId(), id)
                 && Objects.equals(other.getFullname(), fullname)
-                && Objects.equals(other.getPhone(), phone)
                 && Objects.equals(other.getEmail(), email)
                 && Objects.equals(other.getPassword(), password);
     }

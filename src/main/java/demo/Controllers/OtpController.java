@@ -2,12 +2,14 @@ package demo.Controllers;
 
 import demo.Service.EmailService;
 import demo.Service.OtpService;
-import demo.Service.SmsService;
 import demo.core.configuration.Constants;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,34 +21,35 @@ public class OtpController {
 
     private EmailService emailService;
 
-    private SmsService smsService;
-
-    public OtpController(SmsService smsService, OtpService otpService, EmailService emailService) {
-        this.smsService = smsService;
+    public OtpController(OtpService otpService, EmailService emailService) {
         this.otpService = otpService;
         this.emailService = emailService;
     }
 
-    @PostMapping("/send/sms")
-    public String sendOtpSms(@RequestParam String phone) {
-        String otp = otpService.generateOtp(phone);
-        smsService.sendOtp(phone, otp);
-        return "Код отправлен на ваш номер. Пожалуйста проверьте номер телефона." + otp;
-    }
-
     @PostMapping("/verify")
-    public boolean verifyOtp(@RequestParam String key, @RequestParam String otp) {
-        return otpService.validateOtp(key, otp);
+    public ResponseEntity<Map<String, String>> verifyOtp(@RequestBody Map<String, String> requestBody) {
+        Map<String, String> response = new HashMap<>();
+        String key = requestBody.get("key");
+        String otp = requestBody.get("otp");
+        boolean result = otpService.validateOtp(key, otp);
+        response.put("status", result ? "Sucess" : "Failed");
+        return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/send/email")
-    public Map<String, String> sendOtpEmail(@RequestParam String email) {
-        String otp = otpService.generateOtp(email);
-        emailService.sendOtp(email, otp);
+    @PostMapping(value = "/send/email", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, String>> sendOtpEmail(@RequestBody Map<String, String> requestBody) {
         Map<String, String> response = new HashMap<>();
-        response.put("message", "Код отправлен на вашу почту. Пожалуйста проверьте почту.");
-        response.put("otp", otp.toString());
-        return response;
+        String email = requestBody.get("email");
+        try {
+            String otp = otpService.generateOtp(email);
+            emailService.sendOtp(email, otp);
+            response.put("message", "Код отправлен на вашу почту. Пожалуйста проверьте почту.");
+            response.put("otp", otp.toString());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("error", "Произошла ошибка при отправке кода.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 
 }

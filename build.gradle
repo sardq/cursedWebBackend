@@ -42,9 +42,7 @@ dependencies {
 
     implementation 'org.modelmapper:modelmapper:3.2.0'
     implementation 'com.auth0:java-jwt:4.4.0'
-    implementation 'com.twilio.sdk:twilio:9.0.0'
 
-    // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

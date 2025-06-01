@@ -20,8 +20,6 @@ public class UserDto {
     private String password;
     private String role;
     @NotBlank
-    @Size(min = 11, max = 11)
-    private String phone;
     private String token;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -55,14 +53,6 @@ public class UserDto {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getToken() {

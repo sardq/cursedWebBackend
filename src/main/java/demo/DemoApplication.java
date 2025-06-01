@@ -56,17 +56,17 @@ public class DemoApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (args.length > 0 && Objects.equals("--populate", args[0])) {
-            final var admin = new UserEntity("admin", "dreod@mail.ru", "admin", "89041839114");
+            final var admin = new UserEntity("admin", "dreod@mail.ru", "admin");
             admin.setRole(UserRole.ADMIN);
             userService.create(admin);
 
             log.info("Create default users values");
-            final var user1 = userService.create(new UserEntity("sardq", "aasd@asd", "asdsd", "123"));
-            userService.create(new UserEntity("Remy4508", "jbsdk@asd", "asdsd", "123"));
-            userService.create(new UserEntity("Rand", "jbsdk@asd", "asdsd", "123"));
-            userService.create(new UserEntity("Shirotame", "aasdsad@asd", "123", "123"));
-            userService.create(new UserEntity("Domeztos", "aaxsd@asd", "asfgd", "123"));
-            userService.create(new UserEntity("Russel", "aacbxcsd@asd", "zxvb", "123"));
+            final var user1 = userService.create(new UserEntity("sardq", "aasd@asd", "asdsd"));
+            userService.create(new UserEntity("Remy4508", "user@user", "user"));
+            userService.create(new UserEntity("Rand", "jbsdk@asd", "asdsd"));
+            userService.create(new UserEntity("Shirotame", "aasdsad@asd", "123"));
+            userService.create(new UserEntity("Domeztos", "aaxsd@asd", "asfgd"));
+            userService.create(new UserEntity("Russel", "aacbxcsd@asd", "zxvb"));
             log.info("Create default examinationTypes values");
             final var examinationtype1 = examinationTypeService.create(
                     new ExaminationTypeEntity("examinationtype1"));
