@@ -14,6 +14,10 @@ public class ProtocolParameterDTO {
     private Long parametersId;
     @NotBlank
     private String parametersName;
+    @Min(1)
+    private Long examinationId;
+    @NotBlank
+    private String examinationName;
     @NotBlank
     private String body;
 
@@ -32,6 +36,22 @@ public class ProtocolParameterDTO {
 
     public void setParametersName(String parametersName) {
         this.parametersName = parametersName;
+    }
+
+    public String getExaminationName() {
+        return examinationName;
+    }
+
+    public void setExaminationName(String examinationName) {
+        this.examinationName = examinationName;
+    }
+
+    public Long getExaminationId() {
+        return examinationId;
+    }
+
+    public void setExaminationId(Long examinationId) {
+        this.examinationId = examinationId;
     }
 
     public String getBody() {

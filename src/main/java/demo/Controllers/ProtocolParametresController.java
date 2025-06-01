@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import demo.DTO.ProtocolParameterDTO;
 import demo.Model.ProtocolParametresEntity;
+import demo.Service.ExaminationService;
 import demo.Service.ParametresService;
 import demo.Service.ProtocolParametresService;
 import demo.core.configuration.Constants;
@@ -28,15 +29,17 @@ public class ProtocolParametresController {
     public static final String URL = Constants.ADMIN_PREFIX + "/protocolParametres";
 
     private final ParametresService parametresService;
+    private final ExaminationService examinationService;
     private final ProtocolParametresService protocolParametresService;
     private final ModelMapper modelMapper;
 
     public ProtocolParametresController(
             ProtocolParametresService protocolParametresService,
-            ModelMapper modelMapper, ParametresService parametresService) {
+            ModelMapper modelMapper, ParametresService parametresService, ExaminationService examinationService) {
         this.protocolParametresService = protocolParametresService;
         this.modelMapper = modelMapper;
         this.parametresService = parametresService;
+        this.examinationService = examinationService;
     }
 
     private ProtocolParameterDTO toDto(ProtocolParametresEntity entity) {
@@ -47,6 +50,7 @@ public class ProtocolParametresController {
     private ProtocolParametresEntity toEntity(ProtocolParameterDTO dto) {
         final ProtocolParametresEntity entity = modelMapper.map(dto, ProtocolParametresEntity.class);
         entity.setParametres(parametresService.get(dto.getParametersId()));
+        entity.setExamination(examinationService.get(dto.getExaminationId()));
         return entity;
     }
 

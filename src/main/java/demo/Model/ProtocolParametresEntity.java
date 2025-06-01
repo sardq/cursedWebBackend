@@ -19,15 +19,20 @@ public class ProtocolParametresEntity extends BaseEntity {
     @JoinColumn(name = "parametresEntity", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private ParametresEntity parametres;
+    @ManyToOne
+    @JoinColumn(name = "examinationEntity", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private ExaminationEntity examination;
     @Column(length = 20)
     private String body;
 
     public ProtocolParametresEntity() {
     }
 
-    public ProtocolParametresEntity(ParametresEntity parametres, String body) {
+    public ProtocolParametresEntity(ParametresEntity parametres, ExaminationEntity examination, String body) {
         this.parametres = parametres;
         this.body = body;
+        this.examination = examination;
     }
 
     public ParametresEntity getParametres() {
@@ -36,6 +41,14 @@ public class ProtocolParametresEntity extends BaseEntity {
 
     public void setParametres(ParametresEntity parametres) {
         this.parametres = parametres;
+    }
+
+    public ExaminationEntity getExamination() {
+        return examination;
+    }
+
+    public void setExamination(ExaminationEntity examination) {
+        this.examination = examination;
     }
 
     public String getBody() {

@@ -88,8 +88,8 @@ public class ExaminationController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/admin/examination/filter")
-    public List<ExaminationDto> getAllByFilter(
+    @GetMapping("/filter")
+    public Page<ExaminationDto> getAllByFilter(
             @RequestParam(name = "dateStart", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateStart,
             @RequestParam(name = "dateEnd", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateEnd,
             @RequestParam(name = "typeName", defaultValue = "") String typeName,
@@ -98,10 +98,7 @@ public class ExaminationController {
             Model model) {
         Page<ExaminationEntity> result = examinationService.getAllByFilters(dateStart, dateEnd, typeName, sortOrder,
                 page, Constants.DEFUALT_PAGE_SIZE);
-        return result.getContent()
-                .stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
+        return result.map(this::toDto);
     }
 
     @PostMapping("/edit/")

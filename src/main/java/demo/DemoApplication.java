@@ -29,7 +29,7 @@ public class DemoApplication implements CommandLineRunner {
     private final Logger log = LoggerFactory.getLogger(DemoApplication.class);
 
     private final UserService userService;
-    private final MediaService mediaService;
+    // private final MediaService mediaService;
     private final ExaminationService examinationService;
     private final ExaminationTypeService examinationTypeService;
     private final ParametresService parametresService;
@@ -40,7 +40,7 @@ public class DemoApplication implements CommandLineRunner {
             ExaminationTypeService examinationTypeService, ExaminationService examinationService,
             ParametresService parametresService, ProtocolParametresService protocolParametresService) {
         this.userService = userService;
-        this.mediaService = mediaService;
+        // this.mediaService = mediaService;
         this.ticketService = ticketService;
         this.examinationTypeService = examinationTypeService;
         this.examinationService = examinationService;
@@ -104,11 +104,11 @@ public class DemoApplication implements CommandLineRunner {
                     .create(new ParametresEntity(examinationtype2, "test3"));
             log.info("Create default protocolparametres values");
             protocolParametresService
-                    .create(new ProtocolParametresEntity(parameter1, "test1"));
+                    .create(new ProtocolParametresEntity(parameter1, examination1, "test1"));
             protocolParametresService
-                    .create(new ProtocolParametresEntity(parameter2, "test2"));
+                    .create(new ProtocolParametresEntity(parameter2, examination1, "test2"));
             protocolParametresService
-                    .create(new ProtocolParametresEntity(parameter3, "test3"));
+                    .create(new ProtocolParametresEntity(parameter3, examination1, "test3"));
             log.info("Create default ticket values");
             ticketService
                     .create(new TicketEntity(user1, "test1", "test2"));
