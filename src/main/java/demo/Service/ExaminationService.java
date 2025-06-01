@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-import java.sql.Date;
 import java.time.LocalDate;
 
 import org.springframework.data.domain.Sort;
@@ -75,7 +74,10 @@ public class ExaminationService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ExaminationEntity> getAllByFilters(Date dateStart, Date dateEnd, String typeName, String sortOrder,
+    public Page<ExaminationEntity> getAllByFilters(String email, String description,
+            LocalDate dateStart,
+            LocalDate dateEnd, String typeName,
+            String sortOrder,
             int page, int size) {
 
         Sort sort = Sort.by(new Order(Sort.Direction.DESC, "time"));
@@ -85,7 +87,7 @@ public class ExaminationService {
             }
         }
         Pageable pageRequest = PageRequest.of(page, size, sort);
-        return repository.findByFilter(dateStart, dateEnd, typeName, pageRequest);
+        return repository.findByFilter(email, description, dateStart, dateEnd, typeName, pageRequest);
     }
 
     @Transactional(readOnly = true)

@@ -1,6 +1,5 @@
 package demo.Repositories;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -21,11 +20,15 @@ public interface ExaminationRepository
 
     @Query("SELECT e FROM ExaminationEntity e WHERE " +
             "(:typeName IS NULL OR e.examinationType.name ILIKE %:typeName%) " +
-            "AND ((:dateStart IS NULL OR e.time >= :dateStart) " +
-            "AND (:dateEnd IS NULL OR e.time <= :dateEnd))")
+            "AND (:description IS NULL OR e.description ILIKE %:description%) " +
+            "AND (cast(:dateStart as date) IS NULL OR e.time >= cast(:dateStart as date)) " +
+            "AND (e.user.email ILIKE CONCAT('%', :email, '%')) " +
+            "AND (cast(:dateEnd as date) IS NULL OR e.time <= cast(:dateEnd as date))")
     Page<ExaminationEntity> findByFilter(
-            @Param("dateStart") Date dateStart,
-            @Param("dateEnd") Date dateEnd,
+            @Param("email") String email,
+            @Param("description") String description,
+            @Param("dateStart") LocalDate dateStart,
+            @Param("dateEnd") LocalDate dateEnd,
             @Param("typeName") String typeName, Pageable pageable);
 
     Optional<ExaminationEntity> findById(Long Id);

@@ -1,5 +1,8 @@
 package demo.DTO;
 
+import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.constraints.Min;
@@ -21,7 +24,8 @@ public class ExaminationDto {
     @NotBlank
     private String description;
     private String conclusion;
-    private String date;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate time;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public Long getId() {
@@ -64,12 +68,12 @@ public class ExaminationDto {
         this.userFullname = userFullname;
     }
 
-    public String getDate() {
-        return date;
+    public LocalDate getDate() {
+        return time;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setDate(LocalDate time) {
+        this.time = time;
     }
 
     public String getDescription() {

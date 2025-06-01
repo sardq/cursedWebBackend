@@ -6,6 +6,8 @@ import java.util.Objects;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import demo.core.model.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,6 +27,7 @@ public class ExaminationEntity extends BaseEntity {
     @JoinColumn(name = "examinationTypeEntity", nullable = false)
     private ExaminationTypeEntity examinationType;
     @Column(nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate time;
     @Column(length = 100)
     private String conclusion;

@@ -1,6 +1,5 @@
 package demo.Controllers;
 
-import java.sql.Date;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.List;
@@ -66,6 +65,7 @@ public class ExaminationController {
         model.setExaminationTypeId(entity.getExaminationType().getId());
         model.setUserFullname(entity.getUser().getFullname());
         model.setUserId(entity.getUser().getId());
+        model.setDate(entity.getTime());
         return model;
     }
 
@@ -90,13 +90,17 @@ public class ExaminationController {
 
     @GetMapping("/filter")
     public Page<ExaminationDto> getAllByFilter(
-            @RequestParam(name = "dateStart", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateStart,
-            @RequestParam(name = "dateEnd", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateEnd,
+            @RequestParam(name = "dateStart", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateStart,
+            @RequestParam(name = "dateEnd", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateEnd,
+            @RequestParam(name = "description", defaultValue = "") String description,
             @RequestParam(name = "typeName", defaultValue = "") String typeName,
+            @RequestParam(name = "email", defaultValue = "") String email,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(name = "sortOrder", defaultValue = "Сначала новые") String sortOrder,
             Model model) {
-        Page<ExaminationEntity> result = examinationService.getAllByFilters(dateStart, dateEnd, typeName, sortOrder,
+        Page<ExaminationEntity> result = examinationService.getAllByFilters(email, description, dateStart, dateEnd,
+                typeName,
+                sortOrder,
                 page, Constants.DEFUALT_PAGE_SIZE);
         return result.map(this::toDto);
     }
