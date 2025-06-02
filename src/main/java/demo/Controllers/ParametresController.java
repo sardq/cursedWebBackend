@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +26,7 @@ import jakarta.validation.Valid;
 @RequestMapping(ParametresController.URL)
 public class ParametresController {
 
-    public static final String URL = Constants.ADMIN_PREFIX + "/parametres";
+    public static final String URL = Constants.API_URL + "/parametres";
 
     private final ParametresService parametresService;
     private final ModelMapper modelMapper;
@@ -60,7 +61,18 @@ public class ParametresController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/edit/")
+    @GetMapping("/GetParametersByTypeId")
+    public ResponseEntity<Page<ParametresDto>> GetParametersByTypeId(
+            @RequestParam(name = "examinationTypeId", defaultValue = "") Long examinationTypeId,
+            @RequestParam(defaultValue = "0") int page,
+            Model model) {
+        Page<ParametresEntity> result = parametresService.getAllByExaminationType(page, Constants.DEFUALT_PAGE_SIZE,
+                examinationTypeId);
+        Page<ParametresDto> dtoPage = result.map(this::toDto);
+        return ResponseEntity.ok(dtoPage);
+    }
+
+    @GetMapping("/create/")
     public ParametresDto create(
             @RequestBody @Valid ParametresDto dto) {
         return toDto(parametresService.create(toEntity(dto)));

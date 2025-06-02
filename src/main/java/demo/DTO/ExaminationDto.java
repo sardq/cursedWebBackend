@@ -68,11 +68,11 @@ public class ExaminationDto {
         this.userFullname = userFullname;
     }
 
-    public LocalDate getDate() {
+    public LocalDate getTime() {
         return time;
     }
 
-    public void setDate(LocalDate time) {
+    public void setTime(LocalDate time) {
         this.time = time;
     }
 

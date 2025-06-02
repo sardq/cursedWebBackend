@@ -24,7 +24,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping(MediaController.URL)
 public class MediaController {
-    public static final String URL = Constants.ADMIN_PREFIX + "/media";
+    public static final String URL = Constants.API_URL + "/media";
 
     private final MediaService mediaService;
     private final ExaminationService examinationService;
@@ -59,7 +59,7 @@ public class MediaController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/edit/")
+    @GetMapping("/create/")
     public MediaDto create(
             @RequestBody @Valid MediaDto dto) {
         return toDto(mediaService.create(toEntity(dto)));

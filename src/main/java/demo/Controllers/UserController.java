@@ -23,7 +23,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping(UserController.URL)
 public class UserController {
-    public static final String URL = Constants.ADMIN_PREFIX + "/user";
+    public static final String URL = Constants.API_URL + "/user";
 
     private final UserService userService;
     private final ModelMapper modelMapper;
@@ -52,12 +52,6 @@ public class UserController {
                 .stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
-    }
-
-    @GetMapping("/edit/")
-    public UserDto create(
-            @RequestBody @Valid UserDto dto) {
-        return toDto(userService.create(toEntity(dto)));
     }
 
     @PostMapping("/delete/{id}")

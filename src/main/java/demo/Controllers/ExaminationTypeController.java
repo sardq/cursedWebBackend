@@ -51,7 +51,7 @@ public class ExaminationTypeController {
         return result.map(this::toDto);
     }
 
-    @GetMapping("/edit/")
+    @GetMapping("/create/")
     public ExaminationTypeDto create(
             @RequestBody @Valid ExaminationTypeDto dto) {
         return toDto(examinationTypeService.create(toEntity(dto)));

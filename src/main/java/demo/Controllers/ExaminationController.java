@@ -65,7 +65,7 @@ public class ExaminationController {
         model.setExaminationTypeId(entity.getExaminationType().getId());
         model.setUserFullname(entity.getUser().getFullname());
         model.setUserId(entity.getUser().getId());
-        model.setDate(entity.getTime());
+        model.setTime(entity.getTime());
         return model;
     }
 

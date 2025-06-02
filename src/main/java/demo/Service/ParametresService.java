@@ -23,6 +23,16 @@ public class ParametresService {
         return repository.findAll(PageRequest.of(page, size));
     }
 
+    @Transactional(readOnly = true)
+    public Page<ParametresEntity> getAllByExaminationType(int page, int size, Long examinationTypeId) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        if (examinationTypeId != null) {
+            pageRequest = PageRequest.of(page, size);
+            return repository.findByExaminationTypeId(examinationTypeId, pageRequest);
+        }
+        return repository.findAll(pageRequest);
+    }
+
     @Transactional
     public ParametresEntity get(Long id) {
         return repository.findById(id)

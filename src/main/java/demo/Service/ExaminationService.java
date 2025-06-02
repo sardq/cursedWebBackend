@@ -110,6 +110,9 @@ public class ExaminationService {
         final ExaminationEntity existsEntity = get(id);
         existsEntity.setConclusion(entity.getConclusion());
         existsEntity.setDescription(entity.getDescription());
+        existsEntity.setTime(entity.getTime());
+        existsEntity.setExaminationType(entity.getExaminationType());
+        existsEntity.setUser(entity.getUser());
         repository.save(existsEntity);
         return existsEntity;
     }

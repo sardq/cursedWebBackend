@@ -26,7 +26,7 @@ import jakarta.validation.Valid;
 @RequestMapping(ProtocolParametresController.URL)
 public class ProtocolParametresController {
 
-    public static final String URL = Constants.ADMIN_PREFIX + "/protocolParametres";
+    public static final String URL = Constants.API_URL + "/protocolParametres";
 
     private final ParametresService parametresService;
     private final ExaminationService examinationService;
@@ -65,7 +65,7 @@ public class ProtocolParametresController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/edit/")
+    @GetMapping("/create/")
     public ProtocolParameterDTO create(
             @RequestBody @Valid ProtocolParameterDTO dto) {
         return toDto(protocolParametresService.create(toEntity(dto)));
