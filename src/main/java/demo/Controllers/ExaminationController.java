@@ -105,7 +105,7 @@ public class ExaminationController {
         return result.map(this::toDto);
     }
 
-    @PostMapping("/edit/")
+    @PostMapping("/create/")
     public ExaminationDto create(
             @RequestBody @Valid ExaminationDto dto) throws ParseException {
         return toDto(examinationService.create(toEntity(dto)));

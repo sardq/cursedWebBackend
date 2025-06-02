@@ -22,7 +22,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping(ExaminationTypeController.URL)
 public class ExaminationTypeController {
-    public static final String URL = Constants.ADMIN_PREFIX + "/examinationType";
+    public static final String URL = Constants.API_URL + "/examinationType";
 
     private final ExaminationTypeService examinationTypeService;
     private final ModelMapper modelMapper;
@@ -44,13 +44,11 @@ public class ExaminationTypeController {
     }
 
     @GetMapping
-    public List<ExaminationTypeDto> getAll(
-            @RequestParam(defaultValue = "0") int page) {
-        Page<ExaminationTypeEntity> result = examinationTypeService.getAll(page, Constants.DEFUALT_PAGE_SIZE);
-        return result.getContent()
-                .stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
+    public Page<ExaminationTypeDto> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        Page<ExaminationTypeEntity> result = examinationTypeService.getAll(page, size);
+        return result.map(this::toDto);
     }
 
     @GetMapping("/edit/")
