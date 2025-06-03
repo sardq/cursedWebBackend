@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +17,6 @@ import demo.DTO.UserDto;
 import demo.Model.UserEntity;
 import demo.Service.UserService;
 import demo.core.configuration.Constants;
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(UserController.URL)
@@ -52,6 +50,16 @@ public class UserController {
                 .stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/filter")
+    public Page<UserDto> getAllByFilter(
+            @RequestParam(name = "email", defaultValue = "") String email,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int pageSize,
+            Model model) {
+        Page<UserEntity> result = userService.getAllByFilters(email, page, pageSize);
+        return result.map(entity -> this.toDto(entity));
     }
 
     @PostMapping("/delete/{id}")

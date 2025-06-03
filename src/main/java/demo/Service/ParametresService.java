@@ -24,6 +24,13 @@ public class ParametresService {
     }
 
     @Transactional(readOnly = true)
+    public Page<ParametresEntity> getAllByFilters(String name, String typeName, int page, int size) {
+
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return repository.findByFilter(name, typeName, pageRequest);
+    }
+
+    @Transactional(readOnly = true)
     public Page<ParametresEntity> getAllByExaminationType(int page, int size, Long examinationTypeId) {
         PageRequest pageRequest = PageRequest.of(page, size);
         if (examinationTypeId != null) {
@@ -51,6 +58,7 @@ public class ParametresService {
     public ParametresEntity update(Long id, ParametresEntity entity) {
         final ParametresEntity existsEntity = get(id);
         existsEntity.setName(entity.getName());
+        existsEntity.setExaminationType(entity.getExaminationType());
         repository.save(existsEntity);
         return existsEntity;
     }

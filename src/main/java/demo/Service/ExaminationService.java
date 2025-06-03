@@ -101,7 +101,7 @@ public class ExaminationService {
         if (entity == null) {
             throw new IllegalArgumentException("Entity is null");
         }
-        entity.setTime(LocalDate.now());
+
         return repository.save(entity);
     }
 

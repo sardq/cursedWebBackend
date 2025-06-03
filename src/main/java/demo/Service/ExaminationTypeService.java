@@ -19,6 +19,13 @@ public class ExaminationTypeService {
     }
 
     @Transactional(readOnly = true)
+    public Page<ExaminationTypeEntity> getAllByFilters(String name, int page, int size) {
+
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return repository.findByFilter(name, pageRequest);
+    }
+
+    @Transactional(readOnly = true)
     public Page<ExaminationTypeEntity> getAll(int page, int size) {
         return repository.findAll(PageRequest.of(page, size));
     }

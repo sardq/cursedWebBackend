@@ -50,6 +50,17 @@ public class ParametresController {
         return entity;
     }
 
+    @GetMapping("/filter")
+    public Page<ParametresDto> getAllByFilter(
+            @RequestParam(name = "name", defaultValue = "") String name,
+            @RequestParam(name = "typeName", defaultValue = "") String typeName,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int pageSize,
+            Model model) {
+        Page<ParametresEntity> result = parametresService.getAllByFilters(name, typeName, page, pageSize);
+        return result.map(this::toDto);
+    }
+
     @GetMapping
     public List<ParametresDto> getAll(
             @RequestParam(defaultValue = "0") int page,
@@ -72,7 +83,7 @@ public class ParametresController {
         return ResponseEntity.ok(dtoPage);
     }
 
-    @GetMapping("/create/")
+    @PostMapping("/create/")
     public ParametresDto create(
             @RequestBody @Valid ParametresDto dto) {
         return toDto(parametresService.create(toEntity(dto)));

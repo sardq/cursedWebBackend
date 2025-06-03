@@ -1,8 +1,5 @@
 package demo.Controllers;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ch.qos.logback.core.model.Model;
 import demo.DTO.ExaminationTypeDto;
 import demo.Model.ExaminationTypeEntity;
 import demo.Service.ExaminationTypeService;
@@ -51,7 +49,17 @@ public class ExaminationTypeController {
         return result.map(this::toDto);
     }
 
-    @GetMapping("/create/")
+    @GetMapping("/filter")
+    public Page<ExaminationTypeDto> getAllByFilter(
+            @RequestParam(name = "name", defaultValue = "") String name,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int pageSize,
+            Model model) {
+        Page<ExaminationTypeEntity> result = examinationTypeService.getAllByFilters(name, page, pageSize);
+        return result.map(this::toDto);
+    }
+
+    @PostMapping("/create/")
     public ExaminationTypeDto create(
             @RequestBody @Valid ExaminationTypeDto dto) {
         return toDto(examinationTypeService.create(toEntity(dto)));

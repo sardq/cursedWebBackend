@@ -46,6 +46,13 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public Page<UserEntity> getAllByFilters(String email, int page, int size) {
+
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return repository.findByFilter(email, pageRequest);
+    }
+
+    @Transactional(readOnly = true)
     public List<UserEntity> getAll() {
         return StreamSupport.stream(repository.findAll().spliterator(), false).toList();
     }
