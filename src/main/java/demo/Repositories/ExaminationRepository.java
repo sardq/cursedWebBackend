@@ -47,4 +47,11 @@ public interface ExaminationRepository
     List<Object[]> countByTypeAndPeriod(@Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);
 
+    @Query("SELECT e.time, COUNT(e) FROM ExaminationEntity e " +
+            "WHERE e.time BETWEEN :startDate AND :endDate " +
+            "GROUP BY e.time " +
+            "ORDER BY e.time")
+    List<Object[]> countByDate(@Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate);
+
 }

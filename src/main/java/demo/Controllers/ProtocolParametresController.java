@@ -49,23 +49,25 @@ public class ProtocolParametresController {
 
     private ProtocolParametresEntity toEntity(ProtocolParameterDTO dto) {
         final ProtocolParametresEntity entity = modelMapper.map(dto, ProtocolParametresEntity.class);
-        entity.setParametres(parametresService.get(dto.getParametersId()));
+        entity.setParameters(parametresService.get(dto.getParametersId()));
         entity.setExamination(examinationService.get(dto.getExaminationId()));
         return entity;
     }
 
     @GetMapping
     public List<ProtocolParameterDTO> getAll(
+            @RequestParam(defaultValue = "") Long examinationId,
             @RequestParam(defaultValue = "0") int page,
             Model model) {
-        Page<ProtocolParametresEntity> result = protocolParametresService.getAll(page, Constants.DEFUALT_PAGE_SIZE);
+        Page<ProtocolParametresEntity> result = protocolParametresService.getAll(examinationId, page,
+                Constants.DEFUALT_PAGE_SIZE);
         return result.getContent()
                 .stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/create/")
+    @PostMapping("/create/")
     public ProtocolParameterDTO create(
             @RequestBody @Valid ProtocolParameterDTO dto) {
         return toDto(protocolParametresService.create(toEntity(dto)));

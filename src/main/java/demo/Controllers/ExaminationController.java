@@ -45,7 +45,7 @@ public class ExaminationController {
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping("/examinationStat")
+    @GetMapping("/statistic")
     public ExaminationStatistic getExaminationStatistics(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {

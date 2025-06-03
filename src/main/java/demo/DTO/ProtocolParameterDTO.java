@@ -17,8 +17,6 @@ public class ProtocolParameterDTO {
     @Min(1)
     private Long examinationId;
     @NotBlank
-    private String examinationName;
-    @NotBlank
     private String body;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -36,14 +34,6 @@ public class ProtocolParameterDTO {
 
     public void setParametersName(String parametersName) {
         this.parametersName = parametersName;
-    }
-
-    public String getExaminationName() {
-        return examinationName;
-    }
-
-    public void setExaminationName(String examinationName) {
-        this.examinationName = examinationName;
     }
 
     public Long getExaminationId() {

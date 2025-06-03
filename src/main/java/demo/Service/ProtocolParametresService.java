@@ -19,8 +19,13 @@ public class ProtocolParametresService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProtocolParametresEntity> getAll(int page, int size) {
-        return repository.findAll(PageRequest.of(page, size));
+    public Page<ProtocolParametresEntity> getAll(Long examinationId, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        if (examinationId != null) {
+            pageRequest = PageRequest.of(page, size);
+            return repository.findByExaminationId(examinationId, pageRequest);
+        }
+        return repository.findAll(pageRequest);
     }
 
     @Transactional

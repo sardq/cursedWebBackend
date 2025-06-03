@@ -2,6 +2,7 @@ package demo.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import java.time.LocalDate;
@@ -41,16 +42,6 @@ public class ExaminationService {
         return repository.findByUserId(userId, pageRequest);
     }
 
-    @Transactional(readOnly = true)
-    public Page<ExaminationEntity> getAllByUser(int page, int size, Long userId) {
-        Pageable pageRequest = PageRequest.of(page, size);
-        if (userId != null) {
-            pageRequest = PageRequest.of(page, size);
-            return repository.findByUserId(userId, pageRequest);
-        }
-        return repository.findAll(pageRequest);
-    }
-
     public ExaminationStatistic getStatistics(LocalDate startDate, LocalDate endDate) {
 
         if (startDate.isAfter(endDate)) {
@@ -69,7 +60,15 @@ public class ExaminationService {
                         arr -> (String) arr[0],
                         arr -> (Long) arr[1]));
         stats.setExaminationsByType(byType);
-
+        Map<LocalDate, Long> byDate = repository
+                .countByDate(startDate, endDate)
+                .stream()
+                .collect(Collectors.toMap(
+                        arr -> ((LocalDate) arr[0]),
+                        arr -> (Long) arr[1],
+                        (a, b) -> a,
+                        TreeMap::new));
+        stats.setExaminationsByDate(byDate);
         return stats;
     }
 

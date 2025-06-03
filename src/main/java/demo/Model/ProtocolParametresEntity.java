@@ -16,9 +16,9 @@ import jakarta.persistence.Table;
 @Table(name = "protocolParametres")
 public class ProtocolParametresEntity extends BaseEntity {
     @ManyToOne
-    @JoinColumn(name = "parametresEntity", nullable = false)
+    @JoinColumn(name = "parametersEntity", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private ParametresEntity parametres;
+    private ParametresEntity parameters;
     @ManyToOne
     @JoinColumn(name = "examinationEntity", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -29,18 +29,18 @@ public class ProtocolParametresEntity extends BaseEntity {
     public ProtocolParametresEntity() {
     }
 
-    public ProtocolParametresEntity(ParametresEntity parametres, ExaminationEntity examination, String body) {
-        this.parametres = parametres;
+    public ProtocolParametresEntity(ParametresEntity parameters, ExaminationEntity examination, String body) {
+        this.parameters = parameters;
         this.body = body;
         this.examination = examination;
     }
 
-    public ParametresEntity getParametres() {
-        return parametres;
+    public ParametresEntity getParameters() {
+        return parameters;
     }
 
-    public void setParametres(ParametresEntity parametres) {
-        this.parametres = parametres;
+    public void setParameters(ParametresEntity parametres) {
+        this.parameters = parametres;
     }
 
     public ExaminationEntity getExamination() {
@@ -61,7 +61,7 @@ public class ProtocolParametresEntity extends BaseEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, parametres, body);
+        return Objects.hash(id, parameters, body);
     }
 
     @Override
@@ -72,8 +72,8 @@ public class ProtocolParametresEntity extends BaseEntity {
             return false;
         final ProtocolParametresEntity other = (ProtocolParametresEntity) obj;
         return Objects.equals(other.getId(), id)
-                && Objects.equals(other.getParametres(),
-                        parametres)
+                && Objects.equals(other.getParameters(),
+                        parameters)
                 && Objects.equals(other.getBody(),
                         body);
     }

@@ -15,5 +15,7 @@ public interface ProtocolParametresRepository
 
     Page<ProtocolParametresEntity> findAll(Pageable pageable);
 
+    Page<ProtocolParametresEntity> findByExaminationId(Long examinationId, Pageable pageable);
+
     Optional<ProtocolParametresEntity> findById(Long Id);
 }

@@ -1,5 +1,6 @@
 package demo.Controllers;
 
+import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ch.qos.logback.core.model.Model;
 import demo.DTO.MediaDto;
 import demo.Model.MediaEntity;
 import demo.Service.ExaminationService;
@@ -50,8 +52,10 @@ public class MediaController {
 
     @GetMapping
     public List<MediaDto> getAll(
-            @RequestParam(defaultValue = "0") int page) {
-        Page<MediaEntity> result = mediaService.getAll(page, Constants.DEFUALT_PAGE_SIZE);
+            @RequestParam(name = "userId", defaultValue = "0") Long examinationId,
+            @RequestParam(defaultValue = "0") int page,
+            Model model) {
+        Page<MediaEntity> result = mediaService.getAllByExaminationId(examinationId, page, Constants.DEFUALT_PAGE_SIZE);
         return result.getContent()
                 .stream()
                 .map(this::toDto)
@@ -64,12 +68,22 @@ public class MediaController {
         return toDto(mediaService.create(toEntity(dto)));
     }
 
-    // @PostMapping("/edit/{id}")
-    // public MediaDto update(
-    // @PathVariable(name = "id") Long id,
-    // @RequestBody @Valid MediaDto dto) {
-    // return toDto(mediaService.update(id, toEntity(dto)));
+    // @PostMapping
+    // public ResponseEntity<?> upload(@RequestParam("files") List<MultipartFile>
+    // files,
+    // @RequestParam Long examinationId) {
+    // // Поиск examinationEntity и загрузка файлов
+    // // Вернуть JSON с метаданными
     // }
+    @GetMapping("/{id}/resource")
+    public ResponseEntity<Resource> getMedia(@PathVariable Long id) throws IOException {
+        Resource file = mediaService.loadAsResource(id);
+        String contentType = Files.probeContentType(file.getFile().toPath());
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(file);
+    }
 
     @PostMapping("/delete/{id}")
     public MediaDto delete(
