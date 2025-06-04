@@ -46,7 +46,8 @@ public class SecurityConfig {
 
                         .permitAll()
                         .requestMatchers(HttpMethod.GET,
-                                "/api/media/resource/**")
+                                "/api/media/resource/**",
+                                "/api/protocol/pdf/**")
                         .permitAll()
                         .anyRequest().authenticated());
         return http.build();

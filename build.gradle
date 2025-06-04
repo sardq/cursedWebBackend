@@ -38,6 +38,10 @@ dependencies {
     
     implementation 'org.projectlombok:lombok:1.18.30'
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    implementation 'com.lowagie:itext:2.1.7'
+    implementation 'com.openhtmltopdf:openhtmltopdf-core:1.0.10'
+    implementation 'org.freemarker:freemarker:2.3.32'
+    implementation 'com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.10'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
     implementation 'org.postgresql:postgresql:42.7.3'
 

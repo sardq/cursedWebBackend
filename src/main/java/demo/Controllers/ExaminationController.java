@@ -105,6 +105,12 @@ public class ExaminationController {
         return result.map(this::toDto);
     }
 
+    @GetMapping("/{id}")
+    public ExaminationDto getById(@PathVariable("id") Long id) {
+        ExaminationEntity entity = examinationService.get(id);
+        return toDto(entity);
+    }
+
     @PostMapping("/create/")
     public ExaminationDto create(
             @RequestBody @Valid ExaminationDto dto) throws ParseException {
@@ -123,5 +129,4 @@ public class ExaminationController {
             @PathVariable(name = "id") Long id) {
         return toDto(examinationService.delete(id));
     }
-
 }
