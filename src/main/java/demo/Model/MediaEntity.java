@@ -7,8 +7,6 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import demo.core.model.BaseEntity;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -16,16 +14,14 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "media")
 public class MediaEntity extends BaseEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "examinationEntity", nullable = false)
     private ExaminationEntity examination;
     private String filename;
-    private String originalFilename;
-    private String contentType;
-    private String filePath;
+    private String mimeType;
+    private String bucket;
+    private String objectName;
 
     public Long getId() {
         return id;
@@ -35,16 +31,16 @@ public class MediaEntity extends BaseEntity {
         return filename;
     }
 
-    public String getOriginalFilename() {
-        return originalFilename;
+    public String getMimeType() {
+        return mimeType;
     }
 
-    public String getContentType() {
-        return contentType;
+    public String getBucket() {
+        return bucket;
     }
 
-    public String getFilePath() {
-        return filePath;
+    public String getObjectName() {
+        return objectName;
     }
 
     public ExaminationEntity getExamination() {
@@ -59,16 +55,16 @@ public class MediaEntity extends BaseEntity {
         this.filename = filename;
     }
 
-    public void setOriginalFilename(String originalFilename) {
-        this.originalFilename = originalFilename;
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
     }
 
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
+    public void setBucket(String bucket) {
+        this.bucket = bucket;
     }
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
+    public void setObjectName(String objectName) {
+        this.objectName = objectName;
     }
 
     public void setExamination(ExaminationEntity examination) {
@@ -84,22 +80,18 @@ public class MediaEntity extends BaseEntity {
         MediaEntity that = (MediaEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(filename, that.filename) &&
-                Objects.equals(filePath, that.filePath);
+                Objects.equals(bucket,
+                        that.bucket)
+                &&
+                Objects.equals(mimeType,
+                        that.mimeType)
+                &&
+                Objects.equals(objectName, that.objectName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, filename, filePath);
+        return Objects.hash(id, filename, objectName, mimeType, bucket);
     }
 
-    @Override
-    public String toString() {
-        return "MediaEntity{" +
-                "id=" + id +
-                ", filename='" + filename + '\'' +
-                ", originalFilename='" + originalFilename + '\'' +
-                ", contentType='" + contentType + '\'' +
-                ", filePath='" + filePath + '\'' +
-                '}';
-    }
 }

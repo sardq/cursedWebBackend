@@ -39,8 +39,14 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+
                         .requestMatchers(HttpMethod.POST, "/login", "/register",
-                                "/api/otp/**")
+                                "/api/otp/**",
+                                "/api/media/resource/**")
+
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/media/resource/**")
                         .permitAll()
                         .anyRequest().authenticated());
         return http.build();

@@ -1,80 +1,91 @@
 package demo.Service;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.io.InputStream;
+import java.util.List;
 import java.util.UUID;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import demo.Model.ExaminationEntity;
 import demo.Model.MediaEntity;
 import demo.Repositories.MediaRepository;
-import demo.core.error.NotFoundException;
-import jakarta.annotation.Resource;
+import io.minio.BucketExistsArgs;
+import io.minio.GetObjectArgs;
+import io.minio.MakeBucketArgs;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
 
 @Service
 public class MediaService {
-    private final MediaRepository repository;
 
-    public MediaService(MediaRepository repository) {
+    private MinioClient minioClient;
+
+    @Value("${minio.bucket}")
+    private String bucket;
+
+    private MediaRepository repository;
+
+    public MediaService(MinioClient minioClient, MediaRepository repository) {
+        this.minioClient = minioClient;
         this.repository = repository;
     }
 
-    @Transactional(readOnly = true)
-    public Page<MediaEntity> getAll(int page, int size) {
-        return repository.findAll(PageRequest.of(page, size));
-    }
-
-    @Transactional(readOnly = true)
-    public Page<MediaEntity> getAllByExaminationId(Long examinationId, int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        if (examinationId != null) {
-            pageRequest = PageRequest.of(page, size);
-            return repository.findByExaminationId(examinationId, pageRequest);
-        }
-        return repository.findAll(pageRequest);
-    }
-
-    @Transactional(readOnly = true)
-    public MediaEntity get(Long id) {
+    public MediaEntity findByIdOrThrow(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new NotFoundException(MediaEntity.class, id));
+                .orElseThrow(() -> new RuntimeException("Медиа не найдено с id: " + id));
     }
 
-    public MediaEntity save(MultipartFile file, ExaminationEntity exam) throws IOException {
-        String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
-        Path target = root.resolve(filename);
-        Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
+    public MediaEntity save(MultipartFile file, Long examinationId) throws Exception {
+        String objectName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+
+        if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucket).build())) {
+            minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucket).build());
+        }
+
+        minioClient.putObject(
+                PutObjectArgs.builder()
+                        .bucket(bucket)
+                        .object(objectName)
+                        .stream(file.getInputStream(), file.getSize(), -1)
+                        .contentType(file.getContentType())
+                        .build());
 
         MediaEntity media = new MediaEntity();
-        media.setFilename(filename);
-        media.setOriginalFilename(file.getOriginalFilename());
-        media.setContentType(file.getContentType());
-        media.setFilePath(target.toString());
+        media.setFilename(file.getOriginalFilename());
+        media.setMimeType(file.getContentType());
+        media.setBucket(bucket);
+        media.setObjectName(objectName);
+
+        ExaminationEntity exam = new ExaminationEntity();
+        exam.setId(examinationId);
         media.setExamination(exam);
 
         return repository.save(media);
     }
 
-    public Resource loadAsResource(Long mediaId) throws IOException {
+    public void delete(Long mediaId) throws Exception {
         MediaEntity media = repository.findById(mediaId)
-                .orElseThrow(() -> new FileNotFoundException("Media not found"));
-        Path file = Paths.get(media.getFilePath());
-        return new UrlResource(file.toUri());
+                .orElseThrow(() -> new RuntimeException("Not found"));
+        minioClient.removeObject(RemoveObjectArgs.builder()
+                .bucket(media.getBucket())
+                .object(media.getObjectName())
+                .build());
+        repository.delete(media);
     }
 
-    @Transactional
-    public MediaEntity delete(Long id) {
-        final MediaEntity existsEntity = get(id);
-        repository.delete(existsEntity);
-        return existsEntity;
+    public InputStream getResource(Long mediaId) throws Exception {
+        MediaEntity media = repository.findById(mediaId)
+                .orElseThrow(() -> new RuntimeException("Not found"));
+        return minioClient.getObject(GetObjectArgs.builder()
+                .bucket(media.getBucket())
+                .object(media.getObjectName())
+                .build());
+    }
+
+    public List<MediaEntity> listByExamination(Long examId) {
+        return repository.findByExaminationId(examId);
     }
 }
