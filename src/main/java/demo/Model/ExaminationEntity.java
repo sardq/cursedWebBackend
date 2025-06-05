@@ -14,6 +14,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "examinations")
@@ -29,9 +30,9 @@ public class ExaminationEntity extends BaseEntity {
     @Column(nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate time;
-    @Column(length = 100)
+    @Size(min = 10, max = 100)
     private String conclusion;
-    @Column(length = 100)
+    @Size(min = 10, max = 100)
     private String description;
 
     public ExaminationEntity() {

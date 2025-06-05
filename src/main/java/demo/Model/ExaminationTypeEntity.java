@@ -6,11 +6,13 @@ import demo.core.model.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "examinationTypes")
 public class ExaminationTypeEntity extends BaseEntity {
-    @Column(length = 20)
+    @Size(min = 3, max = 20)
+    @Column(nullable = false)
     private String name;
 
     public ExaminationTypeEntity() {

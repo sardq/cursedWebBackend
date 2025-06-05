@@ -3,6 +3,8 @@ package demo.Service;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import demo.core.error.NotFoundException;
 @Service
 public class TicketService {
     private final TicketRepository repository;
+    private static final Logger logger = LoggerFactory.getLogger(TicketService.class);
 
     public TicketService(TicketRepository repository) {
         this.repository = repository;
@@ -22,18 +25,31 @@ public class TicketService {
 
     @Transactional(readOnly = true)
     public List<TicketEntity> getAll() {
-        return StreamSupport.stream(repository.findAll().spliterator(), false).toList();
+        logger.info("Попытка получить список тикетов");
+
+        var result = StreamSupport.stream(repository.findAll().spliterator(), false).toList();
+        logger.info("Полученные тикеты: {}", result);
+        return result;
+
     }
 
     @Transactional(readOnly = true)
     public Page<TicketEntity> getAll(int page, int size) {
-        return repository.findAll(PageRequest.of(page, size));
+        logger.info("Попытка получить список тикетов: {}", page, size);
+
+        var result = repository.findAll(PageRequest.of(page, size));
+        logger.info("Полученные тикеты: {}", result);
+        return result;
+
     }
 
     @Transactional(readOnly = true)
     public TicketEntity get(Long id) {
-        return repository.findById(id)
+        logger.info("Попытка получить тикет пользователя: {}", id);
+        var result = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException(TicketEntity.class, id));
+        logger.info("Тикет получен: {}", result);
+        return result;
     }
 
     @Transactional

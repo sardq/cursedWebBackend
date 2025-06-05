@@ -2,8 +2,10 @@ package demo.Service;
 
 import demo.DTO.ProtocolDto;
 import io.minio.*;
-import io.minio.http.Method;
 import lombok.SneakyThrows;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -14,6 +16,7 @@ public class ProtocolControlService {
 
     private final ProtocolGeneratorService generatorService;
     private final MinioClient minioClient;
+    private static final Logger logger = LoggerFactory.getLogger(ProtocolParametresService.class);
 
     public ProtocolControlService(ProtocolGeneratorService generatorService, MinioClient minioClient) {
         this.generatorService = generatorService;
@@ -23,6 +26,7 @@ public class ProtocolControlService {
     private final String BUCKET_NAME = "protocols";
 
     public void saveProtocol(ProtocolDto dto) {
+        logger.info("Попытка сохранить протокол");
         byte[] pdf = generatorService.generateProtocolPdf(dto);
         String filename = "protocol_" + dto.id() + ".pdf";
 
@@ -52,6 +56,7 @@ public class ProtocolControlService {
             return is.readAllBytes();
 
         } catch (Exception e) {
+            logger.error("шибка при получении файла из MinIO", e);
             throw new RuntimeException("Ошибка при получении файла из MinIO", e);
         }
     }
@@ -69,6 +74,7 @@ public class ProtocolControlService {
                         .build());
             }
         } catch (Exception e) {
+            logger.error("Ошибка при проверке/создании бакета", e);
             throw new RuntimeException("Ошибка при проверке/создании бакета", e);
         }
     }

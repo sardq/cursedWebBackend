@@ -3,6 +3,9 @@ package demo.Service;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
 import jakarta.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -12,6 +15,7 @@ import java.util.List;
 
 @Service
 public class ProtocolService {
+    private static final Logger logger = LoggerFactory.getLogger(ProtocolService.class);
 
     public void generateExaminationProtocol(HttpServletResponse response,
             Long examinationId,
@@ -23,16 +27,19 @@ public class ProtocolService {
             List<ParameterDto> parameters,
             List<MediaDto> mediaFiles) throws IOException {
         try {
+            logger.info("Попытка создать отчет: {}", response, examinationId, description, conclusion, time,
+                    patientFullName, examinationId, examinationTypeName, parameters, mediaFiles);
+
             Document document = new Document(PageSize.A4, 50, 50, 50, 50);
             PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
             document.open();
 
             BaseFont boldFont = BaseFont.createFont(
-                    "fonts/NSB.ttf",
+                    "fonts/Roboto-Bold.ttf",
                     BaseFont.IDENTITY_H,
                     BaseFont.EMBEDDED);
             BaseFont regFont = BaseFont.createFont(
-                    "fonts/NSR.ttf",
+                    "fonts/Roboto-Regular.ttf",
                     BaseFont.IDENTITY_H,
                     BaseFont.EMBEDDED);
 
@@ -80,7 +87,6 @@ public class ProtocolService {
                 document.add(new Paragraph("Нет данных о параметрах", bodyFont));
             }
 
-            // Медиафайлы
             if (mediaFiles != null && !mediaFiles.isEmpty()) {
                 Paragraph mediaHeader = new Paragraph("Прикрепленные файлы:", headerFont);
                 mediaHeader.setSpacingBefore(15);
@@ -109,6 +115,7 @@ public class ProtocolService {
             document.close();
 
         } catch (DocumentException e) {
+            logger.error("Ошибка генерации PDF", e);
             throw new IOException("Ошибка генерации PDF", e);
         }
     }

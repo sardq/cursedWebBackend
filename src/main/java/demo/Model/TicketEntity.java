@@ -11,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "tickets")
@@ -19,9 +20,11 @@ public class TicketEntity extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "UserId", nullable = false)
     private UserEntity user;
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
+    @Size(min = 5, max = 100)
     private String message;
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
+    @Size(min = 5, max = 100)
     private String answer;
     private TicketStatus status;
 

@@ -11,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "protocolParametres")
@@ -23,7 +24,8 @@ public class ProtocolParametresEntity extends BaseEntity {
     @JoinColumn(name = "examinationEntity", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private ExaminationEntity examination;
-    @Column(length = 20)
+    @Column(nullable = false)
+    @Size(min = 3, max = 20)
     private String body;
 
     public ProtocolParametresEntity() {

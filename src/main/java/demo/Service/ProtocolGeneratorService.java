@@ -11,6 +11,8 @@ import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.http.Method;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -20,6 +22,7 @@ import java.util.Map;
 
 @Service
 public class ProtocolGeneratorService {
+    private static final Logger logger = LoggerFactory.getLogger(ProtocolGeneratorService.class);
 
     private final Configuration freemarkerConfig;
     private final ProtocolConfig protocolConfig;
@@ -33,6 +36,7 @@ public class ProtocolGeneratorService {
     }
 
     public byte[] generateProtocolPdf(ProtocolDto dto) {
+        logger.info("Попытка сгенерировать отчет", dto);
         Map<String, Object> data = new HashMap<>();
 
         data.put("id", dto.id());
@@ -63,7 +67,6 @@ public class ProtocolGeneratorService {
         String html = generateHtml(data, "protocol-template.ftl");
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
         toPdf(html, byteStream);
-
         return byteStream.toByteArray();
     }
 
@@ -97,11 +100,13 @@ public class ProtocolGeneratorService {
         try {
             builder.run();
         } catch (IOException e) {
+            logger.error("Ошибка при генерации PDF", e);
             throw new RuntimeException("Ошибка при генерации PDF", e);
         }
     }
 
     public String generatePresignedUrl(String bucket, String filename) {
+
         try {
             return minioClient.getPresignedObjectUrl(
                     GetPresignedObjectUrlArgs.builder()

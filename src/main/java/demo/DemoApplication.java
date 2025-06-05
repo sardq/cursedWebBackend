@@ -56,17 +56,16 @@ public class DemoApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (args.length > 0 && Objects.equals("--populate", args[0])) {
-            final var admin = new UserEntity("admin", "dreod@mail.ru", "admin");
+            final var admin = new UserEntity("Сергеев Сергей Сергеевич", "dreod@mail.ru", "admin");
             admin.setRole(UserRole.ADMIN);
             userService.create(admin);
 
             log.info("Create default users values");
-            final var user1 = userService.create(new UserEntity("sardq", "aasd@asd", "asdsd"));
-            userService.create(new UserEntity("Remy4508", "user@user", "user"));
-            userService.create(new UserEntity("Rand", "jbsdk@asd", "asdsd"));
-            userService.create(new UserEntity("Shirotame", "aasdsad@asd", "123"));
-            userService.create(new UserEntity("Domeztos", "aaxsd@asd", "asfgd"));
-            userService.create(new UserEntity("Russel", "aacbxcsd@asd", "zxvb"));
+            final var user1 = userService.create(new UserEntity("Олег Олегов Олегович", "user@user", "useruser"));
+            userService.create(new UserEntity("Иванов Иван Иванович", "jbsdk@asd", "asdsasfasfd"));
+            userService.create(new UserEntity("Андреев Андрей Андреевич", "aasdsad@asd", "asfasfasf"));
+            userService.create(new UserEntity("Максимов Максим Максимович", "aaxsd@asd", "asfgdasfsaf"));
+            userService.create(new UserEntity("Русланов Руслан Русланович", "aacbxcsd@asd", "zxvasfsafb"));
             log.info("Create default examinationTypes values");
             final var examinationtype1 = examinationTypeService.create(
                     new ExaminationTypeEntity("examinationtype1"));
@@ -76,16 +75,16 @@ public class DemoApplication implements CommandLineRunner {
                     new ExaminationTypeEntity("examinationtype3"));
             log.info("Create default examination values");
             final var examination1 = examinationService.create(
-                    new ExaminationEntity(admin, examinationtype1, LocalDate.now(), "test1",
-                            "test1"));
+                    new ExaminationEntity(admin, examinationtype1, LocalDate.now(), "tesasfsafasft1",
+                            "testasfasfasfsaf1"));
             examinationService.create(
                     new ExaminationEntity(admin, examinationtype1, LocalDate
-                            .now(), "test2",
-                            "test2"));
+                            .now(), "test2safaasfasfasf",
+                            "test2asfasfasfsaff"));
             examinationService.create(
                     new ExaminationEntity(admin, examinationtype1, LocalDate
-                            .now(), "test3",
-                            "test3"));
+                            .now(), "testasfsafsafsafasf3",
+                            "testasfsafasfasasfa3"));
 
             // log.info("Create default media values");
             // mediaService.create(
@@ -97,25 +96,25 @@ public class DemoApplication implements CommandLineRunner {
 
             log.info("Create default parametres values");
             final var parameter1 = parametresService
-                    .create(new ParametresEntity(examinationtype1, "test1"));
+                    .create(new ParametresEntity(examinationtype1, "testasfsafasf1"));
             final var parameter2 = parametresService
-                    .create(new ParametresEntity(examinationtype3, "test2"));
+                    .create(new ParametresEntity(examinationtype3, "testasfsafsaf2"));
             final var parameter3 = parametresService
-                    .create(new ParametresEntity(examinationtype2, "test3"));
+                    .create(new ParametresEntity(examinationtype2, "testasfasfsaf3"));
             log.info("Create default protocolparametres values");
             protocolParametresService
-                    .create(new ProtocolParametresEntity(parameter1, examination1, "test1"));
+                    .create(new ProtocolParametresEntity(parameter1, examination1, "tesasfasfsaft1"));
             protocolParametresService
-                    .create(new ProtocolParametresEntity(parameter2, examination1, "test2"));
+                    .create(new ProtocolParametresEntity(parameter2, examination1, "teasfsafsfst2"));
             protocolParametresService
-                    .create(new ProtocolParametresEntity(parameter3, examination1, "test3"));
+                    .create(new ProtocolParametresEntity(parameter3, examination1, "tesasfsaft3"));
             log.info("Create default ticket values");
             ticketService
-                    .create(new TicketEntity(user1, "test1", "test2"));
+                    .create(new TicketEntity(user1, "tesasfsaft1", "tessafsaft2"));
             ticketService
-                    .create(new TicketEntity(user1, "test1", "test2"));
+                    .create(new TicketEntity(user1, "tesasfsaft1", "tesasfsaft2"));
             ticketService
-                    .create(new TicketEntity(user1, "test1", "test2"));
+                    .create(new TicketEntity(user1, "tesasfsaft1", "tesasfsaft2"));
 
         }
     }

@@ -7,16 +7,21 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
 public class UserEntity extends BaseEntity {
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false)
+    @Size(min = 7, max = 50)
     private String fullname;
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false)
+    @Size(min = 5, max = 30)
     private String email;
     @Column(nullable = false)
+    @Size(min = 5)
     private String password;
+    @Column(nullable = false)
     private UserRole role;
 
     public UserEntity() {
