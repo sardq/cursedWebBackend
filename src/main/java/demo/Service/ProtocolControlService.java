@@ -2,6 +2,7 @@ package demo.Service;
 
 import demo.DTO.ProtocolDto;
 import io.minio.*;
+import io.minio.http.Method;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
@@ -71,4 +72,5 @@ public class ProtocolControlService {
             throw new RuntimeException("Ошибка при проверке/создании бакета", e);
         }
     }
+
 }

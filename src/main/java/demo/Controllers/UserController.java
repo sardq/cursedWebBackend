@@ -62,6 +62,16 @@ public class UserController {
         return result.map(entity -> this.toDto(entity));
     }
 
+    @GetMapping("/patients")
+    public Page<UserDto> getAllUsers(
+            @RequestParam(name = "role", defaultValue = "") String role,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int pageSize,
+            Model model) {
+        Page<UserEntity> result = userService.getAllUsers(role, page, pageSize);
+        return result.map(entity -> this.toDto(entity));
+    }
+
     @PostMapping("/delete/{id}")
     public UserDto delete(
             @PathVariable(name = "id") Long id) {

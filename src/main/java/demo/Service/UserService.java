@@ -53,6 +53,16 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public Page<UserEntity> getAllUsers(String role, int page, int size) {
+        UserRole userRole = UserRole.ADMIN;
+        if ("USER".equals(role)) {
+            userRole = UserRole.USER;
+        }
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return repository.findByRole(userRole, pageRequest);
+    }
+
+    @Transactional(readOnly = true)
     public List<UserEntity> getAll() {
         return StreamSupport.stream(repository.findAll().spliterator(), false).toList();
     }

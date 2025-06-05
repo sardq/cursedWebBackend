@@ -7,6 +7,10 @@ import demo.core.configuration.ProtocolConfig;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import io.minio.GetPresignedObjectUrlArgs;
+import io.minio.MinioClient;
+import io.minio.http.Method;
+
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -19,10 +23,13 @@ public class ProtocolGeneratorService {
 
     private final Configuration freemarkerConfig;
     private final ProtocolConfig protocolConfig;
+    private final MinioClient minioClient;
 
-    public ProtocolGeneratorService(Configuration freemarkerConfig, ProtocolConfig protocolConfig) {
+    public ProtocolGeneratorService(Configuration freemarkerConfig, ProtocolConfig protocolConfig,
+            MinioClient minioClient) {
         this.freemarkerConfig = freemarkerConfig;
         this.protocolConfig = protocolConfig;
+        this.minioClient = minioClient;
     }
 
     public byte[] generateProtocolPdf(ProtocolDto dto) {
@@ -35,8 +42,22 @@ public class ProtocolGeneratorService {
         data.put("patientFullName", dto.patientFullName());
         data.put("examinationTypeName", dto.examinationTypeName());
         data.put("parameters", dto.parameters());
-        data.put("mediaFiles", dto.mediaFiles());
-
+        // List<Map<String, String>> mediaWithLocalFiles = dto.mediaFiles().stream()
+        // .filter(m -> m.mimeType().startsWith("image"))
+        // .map(m -> {
+        // Map<String, String> mediaMap = new HashMap<>();
+        // try {
+        // String tempFilePath = downloadImageToTemp(m.bucket(), m.filename());
+        // mediaMap.put("url", tempFilePath); // file:/tmp/...
+        // mediaMap.put("mimeType", m.mimeType());
+        // } catch (Exception e) {
+        // // можно логировать или игнорировать ошибку
+        // System.err.println("Ошибка при скачивании файла: " + m.filename());
+        // }
+        // return mediaMap;
+        // })
+        // .toList();
+        // data.put("mediaFiles", mediaWithLocalFiles);
         data.putAll(protocolConfig.getProtocolProperties());
 
         String html = generateHtml(data, "protocol-template.ftl");
@@ -79,4 +100,31 @@ public class ProtocolGeneratorService {
             throw new RuntimeException("Ошибка при генерации PDF", e);
         }
     }
+
+    public String generatePresignedUrl(String bucket, String filename) {
+        try {
+            return minioClient.getPresignedObjectUrl(
+                    GetPresignedObjectUrlArgs.builder()
+                            .bucket(bucket)
+                            .object(filename)
+                            .method(Method.GET)
+                            .expiry(60 * 60)
+                            .build());
+        } catch (Exception e) {
+            throw new RuntimeException("Ошибка при получении ссылки из MinIO", e);
+        }
+    }
 }
+// на случай медиа в отчете
+// {<#if mediaFiles??&&(mediaFiles?size>0)><div
+// class="section"><h2>Прикрепленные изображения</h2><#
+// list mediaFiles
+// as media><#if media.mimeType??&&media.mimeType?starts_with("image")>
+// <div style="margin-bottom: 10px;">
+// <img src="${media.url?replace('&', '&amp;')}" style="max-width: 100%;
+// max-height: 300px;" />
+// </div>
+// </#if>
+// </#list>
+// </div>
+// </#if> }

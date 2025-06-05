@@ -4,10 +4,7 @@
   <meta charset="UTF-8" />
   <title>Протокол обследования</title>
   <style>
-  @font-face {
-    font-family: 'Roboto';
-    src: url('file:fonts/Roboto-Regular.ttf') format('truetype');
-  }
+  
   @font-face {
     font-family: 'DejaVuSans';
     src: url('file:fonts/DejaVuSans.ttf') format('truetype');
@@ -48,8 +45,8 @@
       border: 1px solid #ddd;
       vertical-align: top;
     }
-    .roboto {
-      font-family: 'Roboto', sans-serif;
+    .dejavu {
+      font-family: 'DejaVuSans', sans-serif;
     }
     .signature {
       font-family: 'DejaVuSans', sans-serif;
@@ -107,20 +104,10 @@
   </#if>
 </div>
 
-<#if mediaFiles?? && (mediaFiles?size > 0)>
-  <div class="section">
-    <h2>Прикрепленные файлы</h2>
-    <ul>
-      <#list mediaFiles as media>
-        <li>${media.filename()} (${media.mimeType()})</li>
-      </#list>
-    </ul>
-  </div>
-</#if>
 
 <div class="signature">
   <h5 class="roboto">Врач: ___________________</h5>
-  <h5 class="roboto">Дата: ${.now?string("dd.MM.yyyy")}</h5>
+  <h5 class="dejavu">Дата: ${.now?string("dd.MM.yyyy")}</h5>
 </div>
 
 </body>

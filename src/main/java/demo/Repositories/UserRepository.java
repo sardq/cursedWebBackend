@@ -10,6 +10,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import demo.Model.UserEntity;
+import demo.Model.UserRole;
 
 public interface UserRepository extends CrudRepository<UserEntity, Long>,
         PagingAndSortingRepository<UserEntity, Long> {
@@ -21,6 +22,8 @@ public interface UserRepository extends CrudRepository<UserEntity, Long>,
     Optional<UserEntity> findByEmailIgnoreCase(String email);
 
     Page<UserEntity> findAll(Pageable pageable);
+
+    Page<UserEntity> findByRole(UserRole role, Pageable pageable);
 
     @Query("SELECT u FROM UserEntity u WHERE " +
             "(:email IS NULL OR u.email ILIKE %:email%) ")
