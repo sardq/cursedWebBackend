@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +27,7 @@ public class TicketController {
 
     private final UserService userService;
     public static final String URL = Constants.ADMIN_PREFIX + "/ticket";
+    private static final Logger logger = LoggerFactory.getLogger(TicketController.class);
 
     private final TicketService ticketService;
     private final ModelMapper modelMapper;
@@ -52,6 +55,8 @@ public class TicketController {
     public List<TicketDto> getAll(
             @RequestParam(defaultValue = "0") int page,
             Model model) {
+        logger.info("Запрос на получение списка тикетов: {}", page);
+
         Page<TicketEntity> result = ticketService.getAll(page, Constants.DEFUALT_PAGE_SIZE);
         return result.getContent()
                 .stream()
@@ -62,6 +67,8 @@ public class TicketController {
     @GetMapping("/edit/")
     public TicketDto create(
             @RequestBody @Valid TicketDto dto) {
+        logger.info("Запрос на создание тикета: {}", dto);
+
         return toDto(ticketService.create(toEntity(dto)));
     }
 

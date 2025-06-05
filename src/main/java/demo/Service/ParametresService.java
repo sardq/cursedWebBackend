@@ -77,18 +77,21 @@ public class ParametresService {
     @Transactional
     public ParametresEntity update(Long id, ParametresEntity entity) {
         logger.info("Попытка обновить параметр:", id, entity);
-
         final ParametresEntity existsEntity = get(id);
         existsEntity.setName(entity.getName());
         existsEntity.setExaminationType(entity.getExaminationType());
         repository.save(existsEntity);
+        logger.info("Обновленный параметр:", existsEntity);
+
         return existsEntity;
     }
 
     @Transactional
     public ParametresEntity delete(Long id) {
+        logger.info("Попытка удаления параметров:", id);
         final ParametresEntity existsEntity = get(id);
         repository.delete(existsEntity);
+        logger.info("Удаленный параметр:", existsEntity);
         return existsEntity;
     }
 }

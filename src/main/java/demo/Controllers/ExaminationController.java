@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.ui.Model;
@@ -35,6 +37,7 @@ public class ExaminationController {
     private final UserService userService;
     private final ExaminationService examinationService;
     private final ModelMapper modelMapper;
+    private static final Logger logger = LoggerFactory.getLogger(ExaminationController.class);
 
     public ExaminationController(ExaminationService examinationService, UserService userService,
             ExaminationTypeService examinationTypeService,
@@ -49,14 +52,10 @@ public class ExaminationController {
     public ExaminationStatistic getExaminationStatistics(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-
+        logger.info("Запрос статистики обследований с {} по {}", startDate, endDate);
         ExaminationStatistic stats = examinationService.getStatistics(startDate, endDate);
+        logger.debug("Статистика получена: {}", stats);
         return stats;
-    }
-
-    public ExaminationStatistic toTopDto(ExaminationEntity examinationEntity) {
-        return modelMapper.map(examinationEntity, ExaminationStatistic.class);
-
     }
 
     private ExaminationDto toDto(ExaminationEntity entity) {
@@ -81,6 +80,7 @@ public class ExaminationController {
             @RequestParam(name = "userId", defaultValue = "0") Long userId,
             @RequestParam(defaultValue = "0") int page,
             Model model) {
+        logger.info("Запрос обследований пользователя:  {}", userId);
         Page<ExaminationEntity> result = examinationService.getAll(userId, page, Constants.DEFUALT_PAGE_SIZE);
         return result.getContent()
                 .stream()
@@ -98,6 +98,9 @@ public class ExaminationController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(name = "sortOrder", defaultValue = "Сначала новые") String sortOrder,
             Model model) {
+        logger.info("Запрос обследования помощью фильтра: {} {} {} {} {} {} {}", dateStart, dateEnd, description,
+                typeName, email, page, sortOrder);
+
         Page<ExaminationEntity> result = examinationService.getAllByFilters(email, description, dateStart, dateEnd,
                 typeName,
                 sortOrder,
@@ -107,13 +110,16 @@ public class ExaminationController {
 
     @GetMapping("/{id}")
     public ExaminationDto getById(@PathVariable("id") Long id) {
+        logger.info("Запрос обследования с ID: {}", id);
         ExaminationEntity entity = examinationService.get(id);
+        logger.debug("Обследование получено: {}", toDto(entity));
         return toDto(entity);
     }
 
     @PostMapping("/create/")
     public ExaminationDto create(
             @RequestBody @Valid ExaminationDto dto) throws ParseException {
+        logger.info("Попытка создать обследование {}", dto);
         return toDto(examinationService.create(toEntity(dto)));
     }
 
@@ -121,12 +127,14 @@ public class ExaminationController {
     public ExaminationDto update(
             @PathVariable(name = "id") Long id,
             @RequestBody @Valid ExaminationDto dto) {
+        logger.info("Попытка обновить обследование {} {}", id, dto);
         return toDto(examinationService.update(id, toEntity(dto)));
     }
 
     @PostMapping("/delete/{id}")
     public ExaminationDto delete(
             @PathVariable(name = "id") Long id) {
+        logger.info("Попытка удалить обследование {}", id);
         return toDto(examinationService.delete(id));
     }
 }

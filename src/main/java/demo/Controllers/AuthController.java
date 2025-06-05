@@ -6,6 +6,9 @@ import demo.DTO.UserSignupDto;
 import demo.DTO.UserDto;
 import demo.Service.UserService;
 import jakarta.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +20,7 @@ import java.net.URI;
 public class AuthController {
     private final UserService userService;
     private final UserAuthenticationProvider userAuthenticationProvider;
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     public AuthController(UserAuthenticationProvider userAuthenticationProvider, UserService userService) {
         this.userAuthenticationProvider = userAuthenticationProvider;
@@ -25,6 +29,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<UserDto> login(@RequestBody @Valid CredentialsDto credentialsDto) {
+        logger.info("Запрос на регистрацию");
         UserDto userDto = userService.login(credentialsDto);
         userDto.setToken(userAuthenticationProvider.createToken(userDto.getEmail()));
         return ResponseEntity.ok(userDto);
@@ -32,6 +37,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<UserDto> register(@RequestBody @Valid UserSignupDto user) {
+        logger.info("Запрос на регистрацию");
         UserDto createdUser = userService.register(user);
         createdUser.setToken(userAuthenticationProvider.createToken(user.getEmail()));
         return ResponseEntity.created(URI.create("/users/" + createdUser.getId())).body(createdUser);

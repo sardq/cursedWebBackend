@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +27,7 @@ public class MediaService {
 
     @Value("${minio.bucket}")
     private String bucket;
+    private static final Logger logger = LoggerFactory.getLogger(MediaService.class);
 
     private MediaRepository repository;
 
@@ -34,11 +37,16 @@ public class MediaService {
     }
 
     public MediaEntity findByIdOrThrow(Long id) {
-        return repository.findById(id)
+        logger.info("Попытка найти медиа", id);
+        var result = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Медиа не найдено с id: " + id));
+        logger.info("Полученное медиа", result);
+        return result;
     }
 
     public MediaEntity save(MultipartFile file, Long examinationId) throws Exception {
+        logger.info("Попытка сохранить медиа", file, examinationId);
+
         String objectName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
         if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucket).build())) {
@@ -62,11 +70,13 @@ public class MediaService {
         ExaminationEntity exam = new ExaminationEntity();
         exam.setId(examinationId);
         media.setExamination(exam);
+        logger.info("Сохранение медиа:{}", media);
 
         return repository.save(media);
     }
 
     public void delete(Long mediaId) throws Exception {
+        logger.info("Попытка удалить медиа", mediaId);
         MediaEntity media = repository.findById(mediaId)
                 .orElseThrow(() -> new RuntimeException("Not found"));
         minioClient.removeObject(RemoveObjectArgs.builder()
@@ -77,6 +87,7 @@ public class MediaService {
     }
 
     public InputStream getResource(Long mediaId) throws Exception {
+        logger.info("Попытка получить медиа", mediaId);
         MediaEntity media = repository.findById(mediaId)
                 .orElseThrow(() -> new RuntimeException("Not found"));
         return minioClient.getObject(GetObjectArgs.builder()
@@ -86,6 +97,10 @@ public class MediaService {
     }
 
     public List<MediaEntity> listByExamination(Long examId) {
-        return repository.findByExaminationId(examId);
+        logger.info("Попытка получить медиа по обследованию", examId);
+        var result = repository.findByExaminationId(examId);
+        logger.info("Список медиа", examId);
+        return result;
+
     }
 }

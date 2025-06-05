@@ -7,6 +7,8 @@ import demo.core.configuration.Constants;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ public class OtpController {
     private OtpService otpService;
 
     private EmailService emailService;
+    private static final Logger logger = LoggerFactory.getLogger(OtpController.class);
 
     public OtpController(OtpService otpService, EmailService emailService) {
         this.otpService = otpService;
@@ -28,6 +31,7 @@ public class OtpController {
 
     @PostMapping("/verify")
     public ResponseEntity<Map<String, String>> verifyOtp(@RequestBody Map<String, String> requestBody) {
+        logger.info("Запрос на подтверждение кода: {}", requestBody);
         Map<String, String> response = new HashMap<>();
         String key = requestBody.get("key");
         String otp = requestBody.get("otp");
@@ -38,6 +42,7 @@ public class OtpController {
 
     @PostMapping(value = "/send/email", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> sendOtpEmail(@RequestBody Map<String, String> requestBody) {
+        logger.info("Запрос на отправку электронного письма: {}", requestBody);
         Map<String, String> response = new HashMap<>();
         String email = requestBody.get("email");
         try {

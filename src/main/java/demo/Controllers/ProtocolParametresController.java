@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +34,7 @@ public class ProtocolParametresController {
     private final ExaminationService examinationService;
     private final ProtocolParametresService protocolParametresService;
     private final ModelMapper modelMapper;
+    private static final Logger logger = LoggerFactory.getLogger(ProtocolParametresController.class);
 
     public ProtocolParametresController(
             ProtocolParametresService protocolParametresService,
@@ -59,6 +62,8 @@ public class ProtocolParametresController {
             @RequestParam(defaultValue = "") Long examinationId,
             @RequestParam(defaultValue = "0") int page,
             Model model) {
+        logger.info("Запрос на получение списка значений параметров: {} {}", examinationId, page);
+
         Page<ProtocolParametresEntity> result = protocolParametresService.getAll(examinationId, page,
                 Constants.DEFUALT_PAGE_SIZE);
         return result.getContent()
@@ -70,6 +75,7 @@ public class ProtocolParametresController {
     @PostMapping("/create/")
     public ProtocolParameterDTO create(
             @RequestBody @Valid ProtocolParameterDTO dto) {
+        logger.info("Запрос на создание значения параметра: {}", dto);
         return toDto(protocolParametresService.create(toEntity(dto)));
     }
 
@@ -77,12 +83,14 @@ public class ProtocolParametresController {
     public ProtocolParameterDTO update(
             @PathVariable(name = "id") Long id,
             @RequestBody @Valid ProtocolParameterDTO dto) {
+        logger.info("Запрос на обновление значения параметра: {} {}", id, dto);
         return toDto(protocolParametresService.update(id, toEntity(dto)));
     }
 
     @PostMapping("/delete/{id}")
     public ProtocolParameterDTO delete(
             @PathVariable(name = "id") Long id) {
+        logger.info("Запрос на удаление значения параметра: {}", id);
         return toDto(protocolParametresService.delete(id));
     }
 

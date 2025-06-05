@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.core.io.InputStreamResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -32,19 +33,17 @@ public class MediaController {
     public static final String URL = Constants.API_URL + "/media";
 
     private final MediaService mediaService;
-    private final ExaminationService examinationService;
-    private final ModelMapper modelMapper;
+    private static final Logger logger = LoggerFactory.getLogger(MediaController.class);
 
     public MediaController(ExaminationService examinationService, MediaService mediaService,
             ModelMapper modelMapper) {
-        this.examinationService = examinationService;
         this.mediaService = mediaService;
-        this.modelMapper = modelMapper;
     }
 
     @PostMapping(value = "/load", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public List<MediaEntity> upload(@RequestParam("files") List<MultipartFile> files,
             @RequestParam("examinationId") Long examinationId) throws Exception {
+        logger.info("Запрос на загрузку медиа");
         List<MediaEntity> result = new ArrayList<>();
         for (MultipartFile file : files) {
             result.add(mediaService.save(file, examinationId));
@@ -54,19 +53,21 @@ public class MediaController {
 
     @GetMapping
     public List<MediaEntity> getMedia(@RequestParam Long examinationId) {
+        logger.info("Запрос на загрузку списка медиа по обследованию: {}", examinationId);
         return mediaService.listByExamination(examinationId);
     }
 
     @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable Long id) throws Exception {
+        logger.info("Запрос на удаление медиа по ID: {}", id);
         mediaService.delete(id);
     }
 
     @GetMapping("/resource/{id}")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<byte[]> getResource(@PathVariable Long id) throws Exception {
+        logger.info("Запрос на загрузку медиа по Id: {}", id);
         MediaEntity media = mediaService.findByIdOrThrow(id);
-
         try (InputStream is = mediaService.getResource(id)) {
             byte[] content = is.readAllBytes();
             MediaType contentType = MediaType.APPLICATION_OCTET_STREAM;

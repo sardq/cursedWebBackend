@@ -1,5 +1,7 @@
 package demo.Controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -15,6 +17,7 @@ import java.io.InputStream;
 public class LogController {
 
     private final LogService logService;
+    private static final Logger logger = LoggerFactory.getLogger(LogController.class);
 
     public LogController(LogService logService) {
         this.logService = logService;
@@ -22,6 +25,7 @@ public class LogController {
 
     @GetMapping("/download")
     public ResponseEntity<InputStreamResource> uploadThenDownloadLog() {
+        logger.info("Запрос на загрузку лога");
         try {
             String filePath = "logs/application.log";
             String objectName = "application.log";
@@ -36,6 +40,8 @@ public class LogController {
                     .body(new InputStreamResource(inputStream));
 
         } catch (Exception e) {
+
+            logger.error("Ошибка при загрузке лога");
             return ResponseEntity.internalServerError().build();
         }
     }

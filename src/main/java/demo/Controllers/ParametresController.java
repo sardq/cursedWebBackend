@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -31,6 +33,7 @@ public class ParametresController {
     private final ParametresService parametresService;
     private final ModelMapper modelMapper;
     private final ExaminationTypeService examinationTypeService;
+    private static final Logger logger = LoggerFactory.getLogger(ParametresController.class);
 
     public ParametresController(ParametresService parametresService,
             ModelMapper modelMapper, ExaminationTypeService examinationTypeService) {
@@ -57,6 +60,7 @@ public class ParametresController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int pageSize,
             Model model) {
+        logger.info("Запрос на получение списка параметров с фильтром: {} {} {} {} {}", name, typeName, page, pageSize);
         Page<ParametresEntity> result = parametresService.getAllByFilters(name, typeName, page, pageSize);
         return result.map(this::toDto);
     }
@@ -65,6 +69,7 @@ public class ParametresController {
     public List<ParametresDto> getAll(
             @RequestParam(defaultValue = "0") int page,
             Model model) {
+        logger.info("Запрос на получение списка параметров: {}", page);
         Page<ParametresEntity> result = parametresService.getAll(page, Constants.DEFUALT_PAGE_SIZE);
         return result.getContent()
                 .stream()
@@ -77,6 +82,7 @@ public class ParametresController {
             @RequestParam(name = "examinationTypeId", defaultValue = "") Long examinationTypeId,
             @RequestParam(defaultValue = "0") int page,
             Model model) {
+        logger.info("Запрос на получение списка параметров по типу обследования: {}", examinationTypeId, page);
         Page<ParametresEntity> result = parametresService.getAllByExaminationType(page, Constants.DEFUALT_PAGE_SIZE,
                 examinationTypeId);
         Page<ParametresDto> dtoPage = result.map(this::toDto);
@@ -86,6 +92,7 @@ public class ParametresController {
     @PostMapping("/create/")
     public ParametresDto create(
             @RequestBody @Valid ParametresDto dto) {
+        logger.info("Запрос на создание параметра: {}", dto);
         return toDto(parametresService.create(toEntity(dto)));
     }
 
@@ -93,12 +100,15 @@ public class ParametresController {
     public ParametresDto update(
             @PathVariable(name = "id") Long id,
             @RequestBody @Valid ParametresDto dto) {
+        logger.info("Запрос на обновление параметра: {} {}", id, dto);
+
         return toDto(parametresService.update(id, toEntity(dto)));
     }
 
     @PostMapping("/delete/{id}")
     public ParametresDto delete(
             @PathVariable(name = "id") Long id) {
+        logger.info("Запрос на удаление параметра: {}", id);
         return toDto(parametresService.delete(id));
     }
 
