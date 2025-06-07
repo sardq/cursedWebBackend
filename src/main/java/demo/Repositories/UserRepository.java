@@ -26,7 +26,8 @@ public interface UserRepository extends CrudRepository<UserEntity, Long>,
     Page<UserEntity> findByRole(UserRole role, Pageable pageable);
 
     @Query("SELECT u FROM UserEntity u WHERE " +
-            "(:email IS NULL OR u.email ILIKE %:email%) ")
+            "((:email IS NULL OR u.email ILIKE %:email%) " +
+            "OR (:email IS NULL OR u.fullname ILIKE %:email%)) ")
     Page<UserEntity> findByFilter(
             @Param("email") String email, Pageable pageable);
 }

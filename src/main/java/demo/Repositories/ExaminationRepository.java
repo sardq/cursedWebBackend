@@ -20,7 +20,9 @@ public interface ExaminationRepository
 
     @Query("SELECT e FROM ExaminationEntity e WHERE " +
             "(:typeName IS NULL OR e.examinationType.name ILIKE %:typeName%) " +
-            "AND (:description IS NULL OR e.description ILIKE %:description%) " +
+            "AND ((:description IS NULL OR e.description ILIKE %:description%) " +
+            "OR (:description IS NULL OR e.conclusion ILIKE %:description%) " +
+            "OR (:description IS NULL OR e.user.fullname ILIKE %:description%)) " +
             "AND (cast(:dateStart as date) IS NULL OR e.time >= cast(:dateStart as date)) " +
             "AND (e.user.email ILIKE CONCAT('%', :email, '%')) " +
             "AND (cast(:dateEnd as date) IS NULL OR e.time <= cast(:dateEnd as date))")
