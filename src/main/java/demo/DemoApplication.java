@@ -61,7 +61,7 @@ public class DemoApplication implements CommandLineRunner {
             userService.create(admin);
 
             log.info("Create default users values");
-            final var user1 = userService.create(new UserEntity("Олег Олегов Олегович", "user@user", "useruser"));
+            final var user1 = userService.create(new UserEntity("Олег Олегов Олегович", "user@user.user", "useruser"));
             userService.create(new UserEntity("Иванов Иван Иванович", "jbsdk@asd", "asdsasfasfd"));
             userService.create(new UserEntity("Андреев Андрей Андреевич", "aasdsad@asd", "asfasfasf"));
             userService.create(new UserEntity("Максимов Максим Максимович", "aaxsd@asd", "asfgdasfsaf"));

@@ -25,7 +25,7 @@ public class ProtocolParametresEntity extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private ExaminationEntity examination;
     @Column(nullable = false)
-    @Size(min = 3, max = 20)
+    @Size(min = 1, max = 20)
     private String body;
 
     public ProtocolParametresEntity() {

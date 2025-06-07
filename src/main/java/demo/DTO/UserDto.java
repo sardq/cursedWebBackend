@@ -9,14 +9,8 @@ import jakarta.validation.constraints.Size;
 public class UserDto {
     @JsonProperty(access = Access.READ_ONLY)
     private Long id;
-    @NotBlank
-    @Size(min = 3, max = 20)
     private String fullname;
-    @NotBlank
-    @Size(min = 3, max = 20)
     private String email;
-    @NotBlank
-    @Size(min = 3, max = 20)
     private String password;
     private String role;
     @NotBlank

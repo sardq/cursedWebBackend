@@ -13,7 +13,7 @@ import jakarta.validation.constraints.Size;
 @Table(name = "users")
 public class UserEntity extends BaseEntity {
     @Column(nullable = false)
-    @Size(min = 7, max = 50)
+    @Size(min = 4, max = 50)
     private String fullname;
     @Column(nullable = false)
     @Size(min = 5, max = 30)

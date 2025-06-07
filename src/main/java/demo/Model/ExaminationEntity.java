@@ -30,9 +30,9 @@ public class ExaminationEntity extends BaseEntity {
     @Column(nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate time;
-    @Size(min = 10, max = 100)
+    @Size(min = 5, max = 100)
     private String conclusion;
-    @Size(min = 10, max = 100)
+    @Size(min = 5, max = 100)
     private String description;
 
     public ExaminationEntity() {
